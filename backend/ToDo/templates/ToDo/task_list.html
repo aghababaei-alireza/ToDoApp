@@ -27,10 +27,14 @@
                             <div class="task_actions">
                                 {% if not task.completed %}
                                     <a href="{% url "ToDo:task_update" pk=task.id %}" class="action_button" title="Edit" style="background-image: url({% static "ToDo/img/edit.svg" %})" id="btn_edit_{{ task.id }}"></a>
-                                    <a href="{% url "ToDo:task_complete" pk=task.id %}" class="action_button" title="Mark as completed" style="background-image: url({% static "ToDo/img/done.svg" %})" id="btn_done_{{ task.id }}"></a>
-                                {% else %}
-                                    <a href="{% url "ToDo:task_restore" pk=task.id %}" class="action_button" title="Restore" style="background-image: url({% static "ToDo/img/restore.svg" %})" id="btn_restore_{{ task.id }}"></a>
-                                {% endif %}
+                                    <form action="{% url "ToDo:task_complete" pk=task.id %}" method="post"> {% csrf_token %}
+                                        <button type="submit" class="action_button" title="Mark as completed" style="background-image: url({% static "ToDo/img/done.svg" %})" id="btn_done_{{ task.id }}"></button>
+                                    </form>
+                                    {% else %}
+                                    <form action="{% url "ToDo:task_restore" pk=task.id %}" method="post"> {% csrf_token %}
+                                        <button type="submit" class="action_button" title="Restore" style="background-image: url({% static "ToDo/img/restore.svg" %})" id="btn_restore_{{ task.id }}"></button>
+                                    </form>
+                                    {% endif %}
                                 <button type="button" onclick="show_modal('{% url "ToDo:task_delete" pk=task.id %}')" class="action_button" title="Delete" style="background-image: url({% static "ToDo/img/delete.svg" %})" id="btn_delete_{{ task.id }}"></button>
                             </div>
                         </section>

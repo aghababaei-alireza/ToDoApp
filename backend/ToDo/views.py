@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied, ObjectDoesNotExist
+from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .models import Task
@@ -96,7 +97,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
-            raise ValidationError(
+            raise PermissionDenied(
                 "You do not have permission to edit this task.")
         return obj
 
