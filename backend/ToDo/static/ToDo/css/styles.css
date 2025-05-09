@@ -1,0 +1,309 @@
+main {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 50px;
+    height: 100%;
+    padding: 30px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #007bff #f0f0f0;
+}
+
+.tasks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    min-width: 500px;
+    max-width: 35%;
+    border-radius: 20px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    text-decoration: none;
+    text-align: center;
+}
+
+.status_list {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.status {
+    text-decoration: none;
+    color: #bbb;
+}
+
+.status_selected {
+    color: #007bff;
+}
+
+.tasks_list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    list-style-type: none;
+}
+
+.task {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.task_completed {
+    background-color: #eee;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
+.task_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.task_header_no_description {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.task_actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.action_button {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    background-size: cover;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.truncate {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task_description {
+    font-size: 12px;
+    color: #414141;
+}
+
+.task_due_date {
+    font-size: 12px;
+    color: #414141;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: black;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    display: inline-block;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+}
+
+.pagination a.current {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: default;
+}
+
+.pagination .first::before {
+    content: "«";
+}
+
+.pagination .last::before {
+    content: "»";
+}
+
+.pagination .previous::before {
+    content: "‹";
+}
+
+.pagination .next::before {
+    content: "›";
+}
+
+.pagination .disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* ************************************************ */
+
+.task_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.form_section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+}
+
+.form_section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+}
+
+.form_input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.form_input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.button_section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.button2 {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+a.button2:is(:visited, :link, :active) {
+    text-decoration: none;
+    color: inherit;
+}
+
+.error_list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+    list-style-type: none;
+    max-width: 350px;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+}
+
+.overlay {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 20px;
+}
+
+.modal .button_section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal .delete {
+    background-color: red;
+}
+
+.hidden {
+    display: none;
+}

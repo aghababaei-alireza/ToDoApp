@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}{{ form_title }}{% endblock title %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "ToDo/css/styles.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+    <main>
+        <section class="tasks" id="task_form_container">
+            <h1 id="task_form_header">{{ form_title }}</h1>
+            <form class="task_form" method="post" action=".">
+                {% csrf_token %}
+                <section class="form_section">
+                    <label for="title" class="form_label">Title</label>
+                    <input name="title" type="text" class="form_input" id="title" value="{{ form.title.value|default:"" }}">
+                    {% if form.title.errors %}
+                        <ul class="error_list">
+                            {% for error in form.title.errors %}
+                                <li class="error">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </section>
+
+                <section class="form_section">
+                    <label for="description" class="form_label">Description</label>
+                    <textarea name="description" class="form_input" id="description" rows=4>{{ form.description.value|default:"" }}</textarea>
+                    {% if form.description.errors %}
+                        <ul class="error_list">
+                            {% for error in form.description.errors %}
+                                <li class="error">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </section>
+
+                <section class="form_section">
+                    <label for="due_date" class="form_label">Due Date</label>
+                    <input type="datetime-local", class="form_input", id="due_date" name="due_date" placeholder="Due date" value="{{ form.due_date.value|date:'Y-m-d\TH:i'|default:"" }}">
+                    {% if form.due_date.value %}
+                        <script>
+                            document.getElementById("due_date").value = "{{ form.due_date.value|date:'Y-m-d\TH:i' }}";
+                        </script>
+                    {% endif %}
+                    {% if form.due_date.errors %}
+                        <ul class="error_list">
+                            {% for error in form.due_date.errors %}
+                                <li class="error">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </section>
+
+                <section class="button_section">
+                    <button type="submit" class="button" id="form_button">{{ form_button }}</button>
+                    <a href="{% url "ToDo:tasks" %}" class="button2" id="form_cancel_button">Cancel</a>
+                </section>
+
+                {% if form.non_field_errors %}
+                    <ul class="error_list">
+                        {% for error in form.non_field_errors %}
+                            <li class="error">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </form>
+        </section>
+    </main>
+{% endblock content %}
+
+{% block extra_js %}
+    <script src="{% static "ToDo/js/task_list.js" %}"></script>
+{% endblock extra_js %}

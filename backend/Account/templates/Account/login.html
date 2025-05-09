@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "Account/css/styles.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+    <main>
+        <article class="form_container">
+            <h1 class="form_title">Login</h1>
+            <form class="auth_form" action="{% url "Account:login" %}" method="post">
+                {% csrf_token %}
+                <section class="form_section">
+                    <label for="email" class="form_label">Email</label>
+                    <input name="email" type="text" class="form_input" id="email">
+                    {% if form.email.errors %}
+                        <ul class="error_list">
+                            {% for error in form.email.errors %}
+                                <li class="error">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </section>
+                <section class="form_section">
+                    <label for="email" class="form_label">Password</label>
+                    <input name="password" type="password" class="form_input" id="password">
+                    {% if form.password.errors %}
+                        <ul class="error_list">
+                            {% for error in form.password.errors %}
+                                <li class="error">{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </section>
+                <button type="submit">Log in</button>
+            </form>
+
+            <div class="forgot-register">
+                <p>Don't have an account? <a href="{% url "Account:signup" %}">Register</a></p>
+            </div>
+
+            {% if form.non_field_errors %}
+                <ul class="error_list">
+                    {% for error in form.non_field_errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </article>
+    </main>
+{% endblock %}
