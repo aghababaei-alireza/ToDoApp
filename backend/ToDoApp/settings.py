@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Account.apps.AccountConfig',
     "ToDo.apps.TodoConfig",
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +131,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # User Manager Settings
 AUTH_USER_MODEL = 'Account.User'
 LOGIN_URL = 'Account:login'
+
+# Rest Framework Settings
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
