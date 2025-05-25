@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Email Verification Required!{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "Account/css/styles.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+    <main>
+        <article class="form_container">
+            <h1 class="form_title">Email Verification Required!</h1>
+            <p>Your email is not verified yet. Please check your email for verification instructions or resend the verification email.</p>
+            <a href="{% url 'Account:verification-resend' %}" class="button">Resend</a>
+        </article>
+    </main>
+{% endblock %}

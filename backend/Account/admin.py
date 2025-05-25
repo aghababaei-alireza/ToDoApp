@@ -46,7 +46,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["email", "password", "is_active", "is_staff"]
+        fields = ["email", "password", "is_active", "is_staff", "is_verified"]
 
 
 class UserAdmin(BaseUserAdmin):
@@ -60,7 +60,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ["email"]
     fieldsets = [
         (None, {"fields": ["email", "password"]}),
-        (None, {"fields": ["is_active", "is_staff"]}),
+        (None, {"fields": ["is_active", "is_staff", "is_verified"]}),
     ]
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.

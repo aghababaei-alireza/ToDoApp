@@ -2,15 +2,15 @@ from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError, PermissionDenied, ObjectDoesNotExist
-from django.http import Http404
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from .models import Task
 from .forms import TaskForm
+from Account.mixins import VerifiedUserRequiredMixin
 
 
-class TaskListView(LoginRequiredMixin, ListView):
+class TaskListView(LoginRequiredMixin, VerifiedUserRequiredMixin, ListView):
     model = Task
     template_name = 'ToDo/task_list.html'
     context_object_name = 'tasks'
@@ -32,7 +32,7 @@ class TaskListView(LoginRequiredMixin, ListView):
         return context
 
 
-class TaskCompleteView(LoginRequiredMixin, View):
+class TaskCompleteView(LoginRequiredMixin, VerifiedUserRequiredMixin, View):
     def post(self, request, pk: int):
         try:
             task = Task.objects.get(user=request.user, pk=pk)
@@ -47,7 +47,7 @@ class TaskCompleteView(LoginRequiredMixin, View):
         return redirect("ToDo:tasks")
 
 
-class TaskRestoreView(LoginRequiredMixin, View):
+class TaskRestoreView(LoginRequiredMixin, VerifiedUserRequiredMixin, View):
     def post(self, request, pk: int):
         try:
             task = Task.objects.get(user=request.user, pk=pk)
@@ -62,7 +62,7 @@ class TaskRestoreView(LoginRequiredMixin, View):
         return redirect("ToDo:tasks")
 
 
-class TaskCreateView(LoginRequiredMixin, CreateView):
+class TaskCreateView(LoginRequiredMixin, VerifiedUserRequiredMixin, CreateView):
     model = Task
     form_class = TaskForm
     template_name = 'ToDo/task_form.html'
@@ -82,7 +82,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
         return render(self.request, self.template_name, {'form': form})
 
 
-class TaskUpdateView(LoginRequiredMixin, UpdateView):
+class TaskUpdateView(LoginRequiredMixin, VerifiedUserRequiredMixin, UpdateView):
     model = Task
     form_class = TaskForm
     template_name = 'ToDo/task_form.html'
@@ -105,7 +105,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
         return render(self.request, self.template_name, {'form': form})
 
 
-class TaskDeleteView(LoginRequiredMixin, DeleteView):
+class TaskDeleteView(LoginRequiredMixin, VerifiedUserRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy('ToDo:tasks')
 

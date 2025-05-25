@@ -7,7 +7,7 @@ from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from ToDo.models import Task
 from .serializers import TaskSerializer
-from .permissions import IsOwner
+from .permissions import IsOwner, IsVerified
 from .paginations import DefaultPagination
 
 
@@ -17,7 +17,7 @@ class TasksViewSet(viewsets.ModelViewSet):
     """
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsOwner, IsVerified]
     filter_backends = [DjangoFilterBackend,
                        filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['title', 'completed', 'due_date']

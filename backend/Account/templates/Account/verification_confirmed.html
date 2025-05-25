@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Account Verified{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "Account/css/styles.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+    {% if error %}
+        <main>
+            <article class="form_container">
+                <h1 class="form_title">Verification Failed!</h1>
+                <p>{{ error }} If you want to try again, you can request a new verification email.</p>
+                <a class="button" href="{% url "Account:verification-resend" %}">Request Verification Email</a>
+            </article>
+        </main>
+    {% else %}
+    <main>
+        <article class="form_container">
+            <h1 class="form_title">Account Verified</h1>
+            <p>Your account has been successfully verified. You can now access all features.</p>
+            <a href="{% url 'ToDo:tasks' %}" class="button">Home Page</a>
+        </article>
+    </main>
+    {% endif %}
+{% endblock %}

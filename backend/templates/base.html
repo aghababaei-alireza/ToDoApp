@@ -24,12 +24,16 @@
             </section>
         </a>
 
+        <section class="logo_section">
+        <a class="header_button" href="{% url "schema-swagger-ui" %}">API DOC</a>
+
         {% if request.user.is_authenticated %}
             <form action="{% url "Account:logout" %}" method="post">
                 {% csrf_token %}
                 <button type="submit">Logout</button>
             </form>
         {% endif %}
+        </section>
     </header>
     {% block content %}{% endblock content %}
 
