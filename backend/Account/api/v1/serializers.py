@@ -151,7 +151,7 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
     new_password1 = serializers.CharField(required=True)
     captcha = ReCaptchaV2Field(
-        help_text=f"Visit the '{resolve(reverse('Account:captcha'))}' endpoint to get the captcha token.")
+        help_text=f"Visit the 'http://127.0.0.1:8000/account/captcha/' endpoint to get the captcha token.")
 
     def validate(self, attrs):
         if attrs['new_password'] != attrs['new_password1']:
