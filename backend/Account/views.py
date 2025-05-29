@@ -93,6 +93,8 @@ class CustomPasswordResetConfirmView(FormView):
         try:
             user_id = TokenGenerator.check_token(token)
             context.update({"user_id": user_id})
+        except ValueError as e:
+            context.update({"error": str(e)})
         except ExpiredSignatureError:
             context.update({"error": "Token is expired."})
         except InvalidTokenError:
@@ -147,6 +149,8 @@ class VerificationConfirmView(TemplateView):
             user.is_verified = True
             print(f'{80*"*"}\nUSER = {user}\nVERIFIED = {user.is_verified}\n{80*"*"}')
             user.save()
+        except ValueError as e:
+            context.update({"error": str(e)})
         except ExpiredSignatureError:
             context.update({"error": "Token is expired."})
         except InvalidTokenError:
@@ -156,3 +160,7 @@ class VerificationConfirmView(TemplateView):
 
 class VerificationRequiredView(TemplateView):
     template_name = 'Account/email_verification_required.html'
+
+
+class CaptchaVeiw(TemplateView):
+    template_name = 'Account/captcha.html'

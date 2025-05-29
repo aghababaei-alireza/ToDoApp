@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework_simplejwt',
     'mail_templated',
+    "drf_recaptcha",
 ]
 
 MIDDLEWARE = [
@@ -141,6 +142,7 @@ LOGIN_URL = 'Account:login'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
@@ -148,8 +150,8 @@ REST_FRAMEWORK = {
 
 # Simple JWT Settings
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=10),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=3),
     "UPDATE_LAST_LOGIN": True,
 }
 
@@ -157,3 +159,6 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp4dev'
 EMAIL_PORT = 25
+
+# CAPTCHA
+DRF_RECAPTCHA_SECRET_KEY = "6Lchhk4rAAAAAGm8V82gxvEbEbr7_-mX4YW0Or88"

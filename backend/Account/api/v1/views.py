@@ -7,10 +7,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth import get_user_model
 from django.template import loader
 from django.core.mail import EmailMessage
+from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 from Account.tokens import TokenGenerator
-from .serializers import RegistrationSerializer, CustomTokenObtainPairSerializer, CustomAuthTokenSerializer, ChangePasswordSerializer, VerificationResendSerializer, PasswordResetSerializer
+from .serializers import RegistrationSerializer, CustomTokenObtainPairSerializer, CustomAuthTokenSerializer, ChangePasswordSerializer, VerificationResendSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
 
 
 class RegistrationView(GenericAPIView):
@@ -117,7 +119,8 @@ class VerificationResendAPIView(GenericAPIView):
             "domain": domain,
             "site_name": site_name,
             "protocol": "http",
-            "token": TokenGenerator.make_token(user)
+            "token": TokenGenerator.make_token(user),
+            "using_api": True,
         }
         body = loader.render_to_string(template_name, context)
         email = EmailMessage(subject, body, None, [user.email])
@@ -143,9 +146,61 @@ class PasswordResetAPIView(GenericAPIView):
             "domain": domain,
             "site_name": site_name,
             "protocol": "http",
-            "token": TokenGenerator.make_token(user)
+            "token": TokenGenerator.make_token(user),
+            "using_api": True,
         }
         body = loader.render_to_string(template_name, context)
         email = EmailMessage(subject, body, None, [user.email])
         email.send()
         return Response({"details": "Password reset email sent."}, status=status.HTTP_200_OK)
+
+
+class VerificationConfirmAPIView(APIView):
+    """
+    View to confirm user email verification.
+    """
+
+    def get(self, request, token, *args, **kwargs):
+        try:
+            user_id = TokenGenerator.check_token(token)
+        except ValueError as e:
+            return Response({"details": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+        except ExpiredSignatureError as e:
+            return Response({"details": "Token is expired."}, status=status.HTTP_400_BAD_REQUEST)
+        except InvalidTokenError as e:
+            return Response({"details": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+        user = get_user_model().objects.get(pk=user_id)
+        if user is None:
+            return Response({"details": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+        if user.is_verified:
+            return Response({"details": "Email is already verified."}, status=status.HTTP_200_OK)
+        user.is_verified = True
+        user.save()
+        return Response({"details": "Email verified successfully."}, status=status.HTTP_200_OK)
+
+
+class PasswordResetConfirmAPIView(GenericAPIView):
+    """
+    View to confirm password reset.
+    """
+    serializer_class = PasswordResetConfirmSerializer
+
+    def post(self, request, token, *args, **kwargs):
+        try:
+            user_id = TokenGenerator.check_token(token)
+        except ValueError as e:
+            return Response({"details": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+        except ExpiredSignatureError as e:
+            return Response({"details": "Token is expired."}, status=status.HTTP_400_BAD_REQUEST)
+        except InvalidTokenError as e:
+            return Response({"details": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_user_model().objects.get(pk=user_id)
+        if user is None:
+            return Response({"details": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user.set_password(serializer.validated_data['new_password'])
+        user.save()
+        return Response({"details": "Password reset successfully."}, status=status.HTTP_200_OK)

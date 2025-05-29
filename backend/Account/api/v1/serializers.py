@@ -1,8 +1,10 @@
+from django.urls import reverse, resolve
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
+from drf_recaptcha.fields import ReCaptchaV2Field
 
 
 User = get_user_model()
@@ -139,4 +141,26 @@ class PasswordResetSerializer(serializers.Serializer):
                 {"details": "User with this email does not exist."})
 
         attrs['user'] = user
+        return super().validate(attrs)
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    """
+    Serializer for confirming password reset.
+    """
+    new_password = serializers.CharField(required=True)
+    new_password1 = serializers.CharField(required=True)
+    captcha = ReCaptchaV2Field(
+        help_text=f"Visit the '{resolve(reverse('Account:captcha'))}' endpoint to get the captcha token.")
+
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['new_password1']:
+            raise serializers.ValidationError(
+                {"details": "Passwords do not match."})
+
+        try:
+            validate_password(attrs['new_password'])
+        except serializers.ValidationError as e:
+            raise serializers.ValidationError({"details": list(e.messages)})
+
         return super().validate(attrs)

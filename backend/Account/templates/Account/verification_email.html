@@ -43,7 +43,7 @@
     <h1>Verify your Email</h1>
     <p>We received a request to verify your email. Click the button below to verify:</p>
     {% comment %} <p style="width: 100%; display: flex; justify-content: center; align-items: center;"> {% endcomment %}
-        <a class="button" href="{{ protocol }}://{{ domain }}{% url 'Account:verification-confirm' token=token %}" target="_blank" class="btn">Verify Your Email</a>
+        <a class="button" href="{{ protocol }}://{{ domain }}{% if using_api %}{% url 'Account:API:verification-confirm' token=token %}{% else %}{% url 'Account:verification-confirm' token=token %}{% endif %}" target="_blank" class="btn">Verify Your Email</a>
     {% comment %} </p> {% endcomment %}
 
     <p>If you didn’t request a verification for your account, please ignore this email. This link will expire in 1 hour.</p>
@@ -51,7 +51,11 @@
     <hr style="border:none; border-top:1px solid #eeeeee; margin:30px 0;">
     <p>If you're having trouble clicking the "Reset Password" button, copy and paste the URL below into your web browser:</p>
     <p style="word-break: break-all;">
-        {{ protocol }}://{{ domain }}{% url 'Account:verification-confirm' token=token %}
+        {% if using_api %}
+            {{ protocol }}://{{ domain }}{% url 'Account:API:verification-confirm' token=token %}
+        {% else %}
+            {{ protocol }}://{{ domain }}{% url 'Account:verification-confirm' token=token %}
+        {% endif %}
     </p>
 </body>
 </html>

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django.contrib.auth.views import LogoutView
-from .views import CustomLoginView, CustomSignupView, CustomeChangePasswordView, CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetConfirmView, CustomPasswordResetCompleteView, VerificationResendView, VerificationConfirmView, VerificationRequiredView
+from .views import CustomLoginView, CustomSignupView, CustomeChangePasswordView, CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetConfirmView, CustomPasswordResetCompleteView, VerificationResendView, VerificationConfirmView, VerificationRequiredView, CaptchaVeiw
 
 app_name = 'Account'
 
@@ -24,5 +24,6 @@ urlpatterns = [
          name="verification-confirm"),
     path('verified_user_required/', VerificationRequiredView.as_view(),
          name="verification-required"),
+    path('captcha/', CaptchaVeiw.as_view(), name='captcha'),
     path('api/v1/', include('Account.api.v1.urls')),
 ]
