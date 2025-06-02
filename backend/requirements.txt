@@ -6,3 +6,5 @@ djangorestframework-simplejwt==5.5.0
 django-mail-templated==2.6.5
 python-jose[cryptography]==3.5.0
 drf-recaptcha
+pytest==8.3.5
+pytest-django==4.11.1
