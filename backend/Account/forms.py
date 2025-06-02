@@ -3,6 +3,8 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.password_validation import validate_password
 
 User = get_user_model()
 
@@ -69,7 +71,7 @@ class EmailAuthenticationForm(forms.Form):
             )
 
     def get_invalid_login_error(self):
-        return ValidationError(
+        raise ValidationError(
             self.error_messages["invalid_login"],
             code="invalid_login",
         )
@@ -124,3 +126,37 @@ class CustomSignupForm(forms.Form):
             user.save()
 
         return user
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError(_("No user with this email address."))
+        return email
+
+
+class CustomPasswordResetConfirmForm(forms.Form):
+    user_id = forms.IntegerField(widget=forms.HiddenInput())
+    new_password1 = forms.CharField(
+        label=_("New password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+    new_password2 = forms.CharField(
+        label=_("Confirm new password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("new_password1")
+        password2 = cleaned_data.get("new_password2")
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(_("Passwords do not match."))
+
+        validate_password(password1)
+
+        return cleaned_data

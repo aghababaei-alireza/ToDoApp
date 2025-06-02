@@ -41,6 +41,7 @@
 
             <div class="forgot-register">
                 <p>Don't have an account? <a href="{% url "Account:signup" %}">Register</a></p>
+                <p>Forgot your password? <a href="{% url "Account:reset-password" %}">Reset Password</a></p>
             </div>
 
             {% if form.non_field_errors %}

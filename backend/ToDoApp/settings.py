@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,8 +41,12 @@ INSTALLED_APPS = [
     'Account.apps.AccountConfig',
     "ToDo.apps.TodoConfig",
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'drf_yasg',
+    'rest_framework_simplejwt',
+    'mail_templated',
+    "drf_recaptcha",
 ]
 
 MIDDLEWARE = [
@@ -136,4 +141,24 @@ LOGIN_URL = 'Account:login'
 # Rest Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
 }
+
+# Simple JWT Settings
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=3),
+    "UPDATE_LAST_LOGIN": True,
+}
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp4dev'
+EMAIL_PORT = 25
+
+# CAPTCHA
+DRF_RECAPTCHA_SECRET_KEY = "6Lchhk4rAAAAAGm8V82gxvEbEbr7_-mX4YW0Or88"

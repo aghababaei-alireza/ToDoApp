@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verification Email</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333333;
+            padding: 20px;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        
+        a:is(:link, :visited, :hover, :active) {
+            text-decoration: none;
+        }
+        
+        .button {
+            padding: 10px 30px;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Verify your Email</h1>
+    <p>We received a request to verify your email. Click the button below to verify:</p>
+    {% comment %} <p style="width: 100%; display: flex; justify-content: center; align-items: center;"> {% endcomment %}
+        <a class="button" href="{{ protocol }}://{{ domain }}{% if using_api %}{% url 'Account:API:verification-confirm' token=token %}{% else %}{% url 'Account:verification-confirm' token=token %}{% endif %}" target="_blank" class="btn">Verify Your Email</a>
+    {% comment %} </p> {% endcomment %}
+
+    <p>If you didn’t request a verification for your account, please ignore this email. This link will expire in 1 hour.</p>
+    <p>Thanks,<br />The Support Team</p>
+    <hr style="border:none; border-top:1px solid #eeeeee; margin:30px 0;">
+    <p>If you're having trouble clicking the "Reset Password" button, copy and paste the URL below into your web browser:</p>
+    <p style="word-break: break-all;">
+        {% if using_api %}
+            {{ protocol }}://{{ domain }}{% url 'Account:API:verification-confirm' token=token %}
+        {% else %}
+            {{ protocol }}://{{ domain }}{% url 'Account:verification-confirm' token=token %}
+        {% endif %}
+    </p>
+</body>
+</html>

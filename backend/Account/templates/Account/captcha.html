@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Change Password{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "Account/css/styles.css" %}">
+    <style>
+        .h_section {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .tooltip {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            top: 50%;
+            left: 100%;
+            transform: translate(0, -50%);
+        }
+    </style>
+{% endblock extra_css %}
+
+{% block script %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock script %}
+
+{% block content %}
+    <main>
+        <article class="form_container">
+            <h1 class="form_title">Captcha</h1>
+            <section class="form_section">
+                <div class="g-recaptcha" data-sitekey="6Lchhk4rAAAAACfELs0QrZHGGVWk4fzYg5ng-9rh" data-callback="onSubmit"></div>
+                <div class="h_section">
+                    <input class="form_input" type="text" readonly="true" id="captcha-token">
+                    <div style="position: relative;">
+                        <img src="{% static "Account/img/copy.png" %}" alt="copy" width="32px" height="32px"
+                            onclick="on_copy()" title="Copy" style="cursor: pointer;">
+                        <div class="tooltip">Copied!</div>
+                    </div>
+                </div>
+            </section>
+        </article>
+    </main>
+{% endblock content %}
+
+{% block extra_js %}
+    <script>
+    function onSubmit(token) {
+        document.getElementById('captcha-token').value = token;
+    }
+
+    function on_copy() {
+        const tokenInput = document.getElementById('captcha-token');
+        navigator.clipboard.writeText(tokenInput.value)
+            .then(() => {
+                const tooltip = document.querySelector('.tooltip');
+                tooltip.style.display = 'block';
+                setTimeout(() => {
+                    tooltip.style.display = 'none';
+                }, 2000);
+            })
+            .catch(err => console.error('Failed to copy text: ', err));
+    }
+    </script>
+{% endblock extra_js %}
