@@ -1,4 +1,13 @@
 services:
+
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1 --loglevel warning
+
   backend:
     build: ./backend/
     command: python manage.py runserver 0.0.0.0:8000
@@ -6,8 +15,31 @@ services:
       - 8000:8000
     volumes:
       - ./backend:/backend
+    depends_on:
+      - redis
     # environment:
     #   - name=value
+
+  worker:
+    build: ./backend/
+    restart: always
+    command: celery -A ToDoApp worker --loglevel=info
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      - redis
+      - backend
+
+  beat:
+    build: ./backend/
+    restart: always
+    command: celery -A ToDoApp beat --loglevel=info
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      - redis
+      - backend
+
   smtp4dev:
     image: rnwood/smtp4dev:v3
     restart: always

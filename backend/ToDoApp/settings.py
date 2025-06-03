@@ -171,3 +171,12 @@ DRF_RECAPTCHA_SECRET_KEY = "6Lchhk4rAAAAAGm8V82gxvEbEbr7_-mX4YW0Or88"
 
 # CORS HEADERS
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Background Processing
+CELERY_BROKER_URL = "redis://redis:6379/1"
+CELERY_BEAT_SCHEDULE = {
+    "remove_completed_tasks": {
+        "task": "ToDo.tasks.remove_completed_tasks",
+        "schedule": timedelta(minutes=10),
+    },
+}

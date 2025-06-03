@@ -12,3 +12,5 @@ black
 flake8
 faker
 django-cors-headers
+celery
+redis
