@@ -10,3 +10,4 @@ pytest==8.3.5
 pytest-django==4.11.1
 black
 flake8
+faker
