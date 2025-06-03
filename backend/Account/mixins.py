@@ -10,7 +10,7 @@ class VerifiedUserRequiredMixin(AccessMixin):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
 
-        if not getattr(request.user, 'is_verified', False):
-            return redirect(reverse('Account:verification-required'))
+        if not getattr(request.user, "is_verified", False):
+            return redirect(reverse("Account:verification-required"))
 
         return super().dispatch(request, *args, **kwargs)

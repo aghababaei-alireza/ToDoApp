@@ -15,11 +15,12 @@ class EmailAuthenticationForm(forms.Form):
     """
 
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={"autofocus": True}))
+        widget=forms.EmailInput(attrs={"autofocus": True})
+    )
     password = forms.CharField(
         label=_("Password"),
         strip=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "current-password"})
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password"}),
     )
 
     error_messages = {
@@ -48,13 +49,13 @@ class EmailAuthenticationForm(forms.Form):
 
         if email and password:
             self.user_cache = authenticate(
-                self.request, email=email, password=password)
+                self.request, email=email, password=password
+            )
             if self.user_cache is None:
                 self.get_invalid_login_error()
             elif not self.user_cache.is_active:
                 raise forms.ValidationError(
-                    self.error_messages["inactive"],
-                    code="inactive"
+                    self.error_messages["inactive"], code="inactive"
                 )
             return self.cleaned_data
 

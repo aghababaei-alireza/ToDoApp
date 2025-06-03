@@ -15,8 +15,9 @@ class TokenGenerator:
         refresh = RefreshToken.for_user(user)
         access = refresh.access_token
         key = settings.SECRET_KEY[:32]
-        enc = jwe.encrypt(str(access), key,
-                          algorithm="dir", encryption="A256GCM")
+        enc = jwe.encrypt(
+            str(access), key, algorithm="dir", encryption="A256GCM"
+        )
         return enc.decode("utf-8")
 
     @classmethod

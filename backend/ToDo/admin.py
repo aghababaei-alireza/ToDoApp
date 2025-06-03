@@ -3,7 +3,7 @@ from .models import Task
 
 
 class TaskAdmin(admin.ModelAdmin):
-    exclude = ('user',)
+    exclude = ("user",)
 
     def save_model(self, request, obj, form, change):
         if not change or not obj.user_id:

@@ -12,23 +12,23 @@ from Account.mixins import VerifiedUserRequiredMixin
 
 class TaskListView(LoginRequiredMixin, VerifiedUserRequiredMixin, ListView):
     model = Task
-    template_name = 'ToDo/task_list.html'
-    context_object_name = 'tasks'
+    template_name = "ToDo/task_list.html"
+    context_object_name = "tasks"
     paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset().filter(user=self.request.user)
-        status = self.request.GET.get('status', '')
-        if status == 'completed':
+        status = self.request.GET.get("status", "")
+        if status == "completed":
             queryset = queryset.filter(completed=True)
-        elif status == 'active':
+        elif status == "active":
             queryset = queryset.filter(completed=False)
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        status = self.request.GET.get('status', '')
-        context['status'] = status
+        status = self.request.GET.get("status", "")
+        context["status"] = status
         return context
 
 
@@ -37,7 +37,7 @@ class TaskCompleteView(LoginRequiredMixin, VerifiedUserRequiredMixin, View):
         try:
             task = Task.objects.get(user=request.user, pk=pk)
         except Task.DoesNotExist:
-            return render(request, '404.html')
+            return render(request, "404.html")
 
         if task.completed:
             raise ValidationError("Task is already completed.")
@@ -52,7 +52,7 @@ class TaskRestoreView(LoginRequiredMixin, VerifiedUserRequiredMixin, View):
         try:
             task = Task.objects.get(user=request.user, pk=pk)
         except Task.DoesNotExist:
-            return render(request, '404.html')
+            return render(request, "404.html")
 
         if not task.completed:
             raise ValidationError("Task is not completed.")
@@ -62,16 +62,18 @@ class TaskRestoreView(LoginRequiredMixin, VerifiedUserRequiredMixin, View):
         return redirect("ToDo:tasks")
 
 
-class TaskCreateView(LoginRequiredMixin, VerifiedUserRequiredMixin, CreateView):
+class TaskCreateView(
+    LoginRequiredMixin, VerifiedUserRequiredMixin, CreateView
+):
     model = Task
     form_class = TaskForm
-    template_name = 'ToDo/task_form.html'
-    success_url = reverse_lazy('ToDo:tasks')
+    template_name = "ToDo/task_form.html"
+    success_url = reverse_lazy("ToDo:tasks")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_title'] = 'New Task'
-        context['form_button'] = 'Create'
+        context["form_title"] = "New Task"
+        context["form_button"] = "Create"
         return context
 
     def form_valid(self, form):
@@ -79,39 +81,45 @@ class TaskCreateView(LoginRequiredMixin, VerifiedUserRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        return render(self.request, self.template_name, {'form': form})
+        return render(self.request, self.template_name, {"form": form})
 
 
-class TaskUpdateView(LoginRequiredMixin, VerifiedUserRequiredMixin, UpdateView):
+class TaskUpdateView(
+    LoginRequiredMixin, VerifiedUserRequiredMixin, UpdateView
+):
     model = Task
     form_class = TaskForm
-    template_name = 'ToDo/task_form.html'
-    success_url = reverse_lazy('ToDo:tasks')
+    template_name = "ToDo/task_form.html"
+    success_url = reverse_lazy("ToDo:tasks")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_title'] = 'Update Task'
-        context['form_button'] = 'Update'
+        context["form_title"] = "Update Task"
+        context["form_button"] = "Update"
         return context
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
             raise PermissionDenied(
-                "You do not have permission to edit this task.")
+                "You do not have permission to edit this task."
+            )
         return obj
 
     def form_invalid(self, form):
-        return render(self.request, self.template_name, {'form': form})
+        return render(self.request, self.template_name, {"form": form})
 
 
-class TaskDeleteView(LoginRequiredMixin, VerifiedUserRequiredMixin, DeleteView):
+class TaskDeleteView(
+    LoginRequiredMixin, VerifiedUserRequiredMixin, DeleteView
+):
     model = Task
-    success_url = reverse_lazy('ToDo:tasks')
+    success_url = reverse_lazy("ToDo:tasks")
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
             raise ValidationError(
-                "You do not have permission to delete this task.")
+                "You do not have permission to delete this task."
+            )
         return obj

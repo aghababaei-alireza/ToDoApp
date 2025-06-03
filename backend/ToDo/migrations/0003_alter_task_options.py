@@ -6,12 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('ToDo', '0002_task_user'),
+        ("ToDo", "0002_task_user"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='task',
-            options={'ordering': ['completed', '-due_date', '-created_at'], 'verbose_name': 'Task', 'verbose_name_plural': 'Tasks'},
+            name="task",
+            options={
+                "ordering": ["completed", "-due_date", "-created_at"],
+                "verbose_name": "Task",
+                "verbose_name_plural": "Tasks",
+            },
         ),
     ]

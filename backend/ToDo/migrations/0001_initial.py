@@ -7,25 +7,32 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Task',
+            name="Task",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=400)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('due_date', models.DateTimeField(blank=True, null=True)),
-                ('completed', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=400)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("due_date", models.DateTimeField(blank=True, null=True)),
+                ("completed", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'verbose_name': 'Task',
-                'verbose_name_plural': 'Tasks',
-                'ordering': ['-due_date', '-created_at'],
+                "verbose_name": "Task",
+                "verbose_name_plural": "Tasks",
+                "ordering": ["-due_date", "-created_at"],
             },
         ),
     ]

@@ -8,3 +8,5 @@ python-jose[cryptography]==3.5.0
 drf-recaptcha
 pytest==8.3.5
 pytest-django==4.11.1
+black
+flake8
