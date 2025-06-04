@@ -5,6 +5,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.views import APIView
+import requests
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from ToDo.models import Task
 from .serializers import TaskSerializer
 from .permissions import IsOwner, IsVerified
@@ -75,3 +79,20 @@ class TasksViewSet(viewsets.ModelViewSet):
         task.save()
         serializer = self.get_serializer(task)
         return Response(serializer.data)
+
+
+class WeatherAPIView(APIView):
+    """
+    A simple API view to return weather data.
+    """
+    @method_decorator(cache_page(60 * 20))
+    def get(self, request, *args, **kwargs):
+        params = {
+            "q": "Isfahan",
+            "appid": "6886aff89b6961166d6607b0bf7f699e",
+        }
+        response = requests.get(
+            "https://api.openweathermap.org/data/2.5/weather",
+            params=params
+        )
+        return Response(response.json(), status=response.status_code)
