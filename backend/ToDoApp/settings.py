@@ -88,8 +88,12 @@ WSGI_APPLICATION = "ToDoApp.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": config("DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME": config("DB_NAME", default=BASE_DIR / "db.sqlite3"),
+        "ENGINE": config("SQL_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME": config("SQL_DATABASE", default=BASE_DIR / "db.sqlite3"),
+        "USER": config("SQL_USER", default="user"),
+        "PASSWORD": config("SQL_PASSWORD", default="password"),
+        "HOST": config("SQL_HOST", default="localhost"),
+        "PORT": config("SQL_PORT", default="5432"),
     }
 }
 
@@ -163,9 +167,15 @@ SIMPLE_JWT = {
 }
 
 # Email Settings
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp4dev"
-EMAIL_PORT = 25
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config("EMAIL_HOST", cast=str, default=None)
+EMAIL_PORT = config("EMAIL_PORT", cast=str, default='587')
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", cast=str, default=None)
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str, default=None)
+# Use EMAIL_PORT 587 for TLS
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)
+# EUse MAIL_PORT 465 for SSL
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)
 
 # CAPTCHA
 DRF_RECAPTCHA_SECRET_KEY = config("DRF_RECAPTCHA_SECRET_KEY", "test")

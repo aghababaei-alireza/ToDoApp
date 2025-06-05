@@ -8,9 +8,22 @@ services:
       - '6379:6379'
     command: redis-server --save 60 1 --loglevel warning
 
+  postgres_db:
+    container_name: postgres_db
+    image: postgres
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=django
+      - POSTGRES_PASSWORD=django
+      - POSTGRES_DB=todo_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   backend:
     build: ./backend/
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn ToDoApp.wsgi --bind 0.0.0.0:8000"
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py create_fake_tasks && gunicorn ToDoApp.wsgi --bind 0.0.0.0:8000"
     ports:
       - 8000:8000
     volumes:
@@ -19,6 +32,7 @@ services:
       - media_volume:/backend/media
     depends_on:
       - redis
+      - postgres_db
     env_file:
       - .env
     environment:
@@ -65,3 +79,4 @@ services:
 volumes:
   static_volume:
   media_volume:
+  postgres_data:

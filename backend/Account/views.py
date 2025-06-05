@@ -9,7 +9,7 @@ from django.views.generic import FormView, TemplateView
 from django.urls import reverse_lazy
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template import loader
 from django.contrib.sites.shortcuts import get_current_site
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
@@ -66,7 +66,8 @@ class CustomPasswordResetView(PasswordResetView):
     """
 
     template_name = "Account/reset_password.html"
-    email_template_name = "Account/password_reset_email.html"
+    email_template_name = "Account/password_reset_email.txt"
+    html_email_template_name = "Account/password_reset_email.html"
     subject_template_name = "Account/password_reset_subject.txt"
     success_url = reverse_lazy("Account:reset-password-done")
     form_class = CustomPasswordResetForm
@@ -149,7 +150,11 @@ class VerificationResendView(LoginRequiredMixin, TemplateView):
             "token": TokenGenerator.make_token(user),
         }
         body = loader.render_to_string(template_name, context)
-        email = EmailMessage(subject, body, None, [user.email])
+        body_txt = loader.render_to_string(
+            "Account/verification_email.txt", context)
+        # email = EmailMessage(subject, body, None, [user.email])
+        email = EmailMultiAlternatives(subject, body_txt, None, [user.email])
+        email.attach_alternative(body, "text/html")
         email.send()
         return super().get(request, *args, **kwargs)
 

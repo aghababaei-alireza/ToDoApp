@@ -1,0 +1,2 @@
+We received a request to verify your email.
+Click this link to verify your email: {{ protocol }}://{{ domain }}{% if using_api %}{% url 'Account:API:verification-confirm' token=token %}{% else %}{% url 'Account:verification-confirm' token=token %}{% endif %}
