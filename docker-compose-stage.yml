@@ -1,0 +1,67 @@
+services:
+
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1 --loglevel warning
+
+  backend:
+    build: ./backend/
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn ToDoApp.wsgi --bind 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/backend
+      - static_volume:/backend/staticfiles
+      - media_volume:/backend/media
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    environment:
+      - DEBUG=False
+
+  worker:
+    build: ./backend/
+    restart: always
+    command: celery -A ToDoApp worker --loglevel=info
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      - redis
+      - backend
+    env_file:
+      - .env
+
+  beat:
+    build: ./backend/
+    restart: always
+    command: celery -A ToDoApp beat --loglevel=info
+    volumes:
+      - ./backend:/backend
+    depends_on:
+      - redis
+      - backend
+    env_file:
+      - .env
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - '80:80'
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/home/backend/staticfiles
+      - media_volume:/home/backend/media
+    depends_on:
+      - backend
+      - redis
+
+volumes:
+  static_volume:
+  media_volume:

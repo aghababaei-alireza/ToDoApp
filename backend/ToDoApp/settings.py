@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,14 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    "django-insecure-k)v12hkli8)f)cfj-(y!)vt=)l%n974dl6%tl*h@w40x+-a)e0"
-)
+SECRET_KEY = config("SECRET_KEY", default="test")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="[*]",
+                       cast=lambda v: [s.strip() for s in v.split(",")])
 
 
 # Application definition
@@ -88,8 +88,8 @@ WSGI_APPLICATION = "ToDoApp.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": config("DB_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME": config("DB_NAME", default=BASE_DIR / "db.sqlite3"),
     }
 }
 
@@ -129,6 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
@@ -167,7 +168,7 @@ EMAIL_HOST = "smtp4dev"
 EMAIL_PORT = 25
 
 # CAPTCHA
-DRF_RECAPTCHA_SECRET_KEY = "6Lchhk4rAAAAAGm8V82gxvEbEbr7_-mX4YW0Or88"
+DRF_RECAPTCHA_SECRET_KEY = config("DRF_RECAPTCHA_SECRET_KEY", "test")
 
 # CORS HEADERS
 CORS_ALLOW_ALL_ORIGINS = True
