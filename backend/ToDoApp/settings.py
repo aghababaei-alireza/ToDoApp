@@ -181,7 +181,9 @@ EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)
 DRF_RECAPTCHA_SECRET_KEY = config("DRF_RECAPTCHA_SECRET_KEY", "test")
 
 # CORS HEADERS
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="127.0.0.1:8000,localhost:8000",
+                              cast=lambda v: [s.strip() for s in v.split(",")])
 
 # Background Processing
 CELERY_BROKER_URL = "redis://redis:6379/1"
