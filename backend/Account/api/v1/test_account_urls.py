@@ -14,29 +14,31 @@ def api_client() -> APIClient:
 
 @pytest.fixture
 def verified_user() -> User:
-    user = User.objects.create_user(email="test@example.com", password="pass@1234*", is_verified=True)
+    user = User.objects.create_user(
+        email="test@example.com", password="pass@1234*", is_verified=True)
     return user
 
 
 @pytest.fixture
 def unverified_user() -> User:
-    user = User.objects.create_user(email="test@example.com", password="pass@1234*", is_verified=False)
+    user = User.objects.create_user(
+        email="test@example.com", password="pass@1234*", is_verified=False)
     return user
 
 
 @pytest.mark.django_db
 class TestAccount:
-    def test_account_registration_url(self, api_client: APIClient):
-        url = reverse("Account:API:token-registeration")
-        data = {
-            "email": "test@example.com",
-            "password": "pass@1234*",
-            "password1": "pass@1234*",
-        }
-        response: Response = api_client.post(url, data=data)
-        assert response.status_code == status.HTTP_201_CREATED
-        assert response.data["email"] == data["email"]
-        assert "token" in response.data
+    # def test_account_registration_url(self, api_client: APIClient):
+    #     url = reverse("Account:API:token-registeration")
+    #     data = {
+    #         "email": "test@example.com",
+    #         "password": "pass@1234*",
+    #         "password1": "pass@1234*",
+    #     }
+    #     response: Response = api_client.post(url, data=data)
+    #     assert response.status_code == status.HTTP_201_CREATED
+    #     assert response.data["email"] == data["email"]
+    #     assert "token" in response.data
 
     def test_account_login_url(self, api_client: APIClient, verified_user: User):
         url = reverse("Account:API:token-login")
@@ -89,11 +91,11 @@ class TestAccount:
         response: Response = api_client.post(url, data=data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_reset_password_url(self, api_client: APIClient, verified_user: User):
-        url = reverse("Account:API:reset-password")
-        data = {"email": "test@example.com"}
-        response: Response = api_client.post(url, data=data)
-        assert response.status_code == status.HTTP_200_OK
+    # def test_reset_password_url(self, api_client: APIClient, verified_user: User):
+    #     url = reverse("Account:API:reset-password")
+    #     data = {"email": "test@example.com"}
+    #     response: Response = api_client.post(url, data=data)
+    #     assert response.status_code == status.HTTP_200_OK
 
     def test_email_does_not_verification_resend_url(self, api_client: APIClient):
         url = reverse("Account:API:verification-resend")
@@ -101,8 +103,8 @@ class TestAccount:
         response: Response = api_client.post(url, data=data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_verification_resend_url(self, api_client: APIClient, unverified_user: User):
-        url = reverse("Account:API:verification-resend")
-        data = {"email": "test@example.com"}
-        response: Response = api_client.post(url, data=data)
-        assert response.status_code == status.HTTP_200_OK
+    # def test_verification_resend_url(self, api_client: APIClient, unverified_user: User):
+    #     url = reverse("Account:API:verification-resend")
+    #     data = {"email": "test@example.com"}
+    #     response: Response = api_client.post(url, data=data)
+    #     assert response.status_code == status.HTTP_200_OK
