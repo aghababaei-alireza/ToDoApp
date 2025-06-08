@@ -33,10 +33,9 @@ jobs:
     - name: Connect to server
       uses: appleboy/ssh-action@master
       with:
-        host: 46.34.163.163
-        port: 22
-        username: root
-        password: xgvzk
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
         script: |
           cd ${{ secrets.PROJECT_PATH}}
           docker compose -f docker-compose-stage.yml down
