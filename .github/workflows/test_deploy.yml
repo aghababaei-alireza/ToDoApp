@@ -2,7 +2,7 @@ name: Test and Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "deploy"]
   pull_request:
     branches: [ "main" ]
 
@@ -18,7 +18,7 @@ jobs:
     - name: Setup Docker Compose
       run: docker compose up -d
     - name: Reformat and flake8 Check
-      run: docker compose exec backend sh -c "black . && flake8 ."
+      run: docker compose exec backend sh -c "black -l 120 . && flake8 ."
     - name: Run Tests
       run: docker compose exec backend sh -c "pytest ."
 

@@ -27,8 +27,7 @@ SECRET_KEY = config("SECRET_KEY", default="test")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=True, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="[*]",
-                       cast=lambda v: [s.strip() for s in v.split(",")])
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="[*]", cast=lambda v: [s.strip() for s in v.split(",")])
 
 
 # Application definition
@@ -149,9 +148,7 @@ LOGIN_URL = "Account:login"
 
 # Rest Framework Settings
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": [
-        "django_filters.rest_framework.DjangoFilterBackend"
-    ],
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
@@ -167,9 +164,9 @@ SIMPLE_JWT = {
 }
 
 # Email Settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST", cast=str, default=None)
-EMAIL_PORT = config("EMAIL_PORT", cast=str, default='587')
+EMAIL_PORT = config("EMAIL_PORT", cast=str, default="587")
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", cast=str, default=None)
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str, default=None)
 # Use EMAIL_PORT 587 for TLS
@@ -184,8 +181,11 @@ DRF_RECAPTCHA_SECRET_KEY = config("DRF_RECAPTCHA_SECRET_KEY", "test")
 if config("CORS_ALLOW_ALL_ORIGINS", default=False, cast=bool):
     CORS_ALLOW_ALL_ORIGINS = True
 else:
-    CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="127.0.0.1:8000,localhost:8000",
-                                  cast=lambda v: [s.strip() for s in v.split(",")])
+    CORS_ALLOWED_ORIGINS = config(
+        "CORS_ALLOWED_ORIGINS",
+        default="127.0.0.1:8000,localhost:8000",
+        cast=lambda v: [s.strip() for s in v.split(",")],
+    )
 
 # Background Processing
 CELERY_BROKER_URL = "redis://redis:6379/1"
@@ -203,7 +203,7 @@ CACHES = {
         "LOCATION": "redis://redis:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
+        },
     }
 }
 

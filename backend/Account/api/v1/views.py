@@ -9,7 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import get_user_model
 from django.template import loader
-from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 from Account.tokens import TokenGenerator
 from .serializers import (
@@ -45,8 +45,7 @@ class RegistrationView(GenericAPIView):
             "token": TokenGenerator.make_token(user),
         }
         body = loader.render_to_string(template_name, context)
-        body_txt = loader.render_to_string(
-            "Account/verification_email.txt", context)
+        body_txt = loader.render_to_string("Account/verification_email.txt", context)
         # email = EmailMessage(subject, body, None, [user.email])
         email = EmailMultiAlternatives(subject, body_txt, None, [user.email])
         email.attach_alternative(body, "text/html")
@@ -65,9 +64,7 @@ class CustomAuthToken(ObtainAuthToken):
     serializer_class = CustomAuthTokenSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
-            data=request.data, context={"request": request}
-        )
+        serializer = self.serializer_class(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data["user"]
         token, _ = Token.objects.get_or_create(user=user)
@@ -142,15 +139,12 @@ class VerificationResendAPIView(GenericAPIView):
             "using_api": True,
         }
         body = loader.render_to_string(template_name, context)
-        body_txt = loader.render_to_string(
-            "Account/verification_email.txt", context)
+        body_txt = loader.render_to_string("Account/verification_email.txt", context)
         # email = EmailMessage(subject, body, None, [user.email])
         email = EmailMultiAlternatives(subject, body_txt, None, [user.email])
         email.attach_alternative(body, "text/html")
         email.send()
-        return Response(
-            {"details": "Verification email sent."}, status=status.HTTP_200_OK
-        )
+        return Response({"details": "Verification email sent."}, status=status.HTTP_200_OK)
 
 
 class PasswordResetAPIView(GenericAPIView):
@@ -175,8 +169,7 @@ class PasswordResetAPIView(GenericAPIView):
             "using_api": True,
         }
         body = loader.render_to_string(template_name, context)
-        body_txt = loader.render_to_string(
-            "Account/password_reset_email.txt", context)
+        body_txt = loader.render_to_string("Account/password_reset_email.txt", context)
         # email = EmailMessage(subject, body, None, [user.email])
         email = EmailMultiAlternatives(subject, body_txt, None, [user.email])
         email.attach_alternative(body, "text/html")

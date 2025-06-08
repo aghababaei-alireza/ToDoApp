@@ -85,14 +85,12 @@ class WeatherAPIView(APIView):
     """
     A simple API view to return weather data.
     """
+
     @method_decorator(cache_page(60 * 20))
     def get(self, request, *args, **kwargs):
         params = {
             "q": "Isfahan",
             "appid": "6886aff89b6961166d6607b0bf7f699e",
         }
-        response = requests.get(
-            "https://api.openweathermap.org/data/2.5/weather",
-            params=params
-        )
+        response = requests.get("https://api.openweathermap.org/data/2.5/weather", params=params)
         return Response(response.json(), status=response.status_code)

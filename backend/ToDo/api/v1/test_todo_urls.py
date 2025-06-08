@@ -14,17 +14,13 @@ def api_client():
 
 @pytest.fixture
 def verified_user():
-    user = User.objects.create_user(
-        email="test@example.com", password="pass@1234*", is_verified=True
-    )
+    user = User.objects.create_user(email="test@example.com", password="pass@1234*", is_verified=True)
     return user
 
 
 @pytest.fixture
 def unverified_user() -> User:
-    user = User.objects.create_user(
-        email="test@example.com", password="pass@1234*", is_verified=False
-    )
+    user = User.objects.create_user(email="test@example.com", password="pass@1234*", is_verified=False)
     return user
 
 
@@ -56,25 +52,19 @@ class TestTask:
         response: Response = api_client.get(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_list_authenticated_verified_user(
-        self, api_client: APIClient, verified_user: User
-    ):
+    def test_task_list_authenticated_verified_user(self, api_client: APIClient, verified_user: User):
         url = reverse("ToDo:tasks-list")
         api_client.force_authenticate(user=verified_user)
         response: Response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
 
-    def test_task_list_authenticated_unverified_user(
-        self, api_client: APIClient, unverified_user: User
-    ):
+    def test_task_list_authenticated_unverified_user(self, api_client: APIClient, unverified_user: User):
         url = reverse("ToDo:tasks-list")
         api_client.force_authenticate(user=unverified_user)
         response: Response = api_client.get(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_create_authenticated_verified_user(
-        self, api_client: APIClient, verified_user: User
-    ):
+    def test_task_create_authenticated_verified_user(self, api_client: APIClient, verified_user: User):
         url = reverse("ToDo:tasks-list")
         api_client.force_authenticate(user=verified_user)
         data = {
@@ -88,9 +78,7 @@ class TestTask:
         assert response.data["description"] == data["description"]
         assert response.data["due_date"] == data["due_date"]
 
-    def test_task_create_incompleted_data(
-        self, api_client: APIClient, verified_user: User
-    ):
+    def test_task_create_incompleted_data(self, api_client: APIClient, verified_user: User):
         url = reverse("ToDo:tasks-list")
         api_client.force_authenticate(user=verified_user)
         data = {
@@ -100,25 +88,19 @@ class TestTask:
         response: Response = api_client.post(url, data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_task_create_authenticated_unverified_user(
-        self, api_client: APIClient, unverified_user: User
-    ):
+    def test_task_create_authenticated_unverified_user(self, api_client: APIClient, unverified_user: User):
         url = reverse("ToDo:tasks-list")
         api_client.force_authenticate(user=unverified_user)
         data = {"title": "Test Task", "description": "Test Description"}
         response: Response = api_client.post(url, data)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_detail_requires_authentication(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_detail_requires_authentication(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         response: Response = api_client.get(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_detail_authenticated_verified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_detail_authenticated_verified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         api_client.force_authenticate(user=incompleted_task.user)
         response: Response = api_client.get(url)
@@ -129,9 +111,7 @@ class TestTask:
         assert response.data["due_date"] == incompleted_task.due_date
         assert response.data["completed"] == incompleted_task.completed
 
-    def test_task_detail_authenticated_unverified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_detail_authenticated_unverified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         user = incompleted_task.user
         user.is_verified = False
@@ -139,17 +119,13 @@ class TestTask:
         response: Response = api_client.get(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_update_requires_authentication(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_update_requires_authentication(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         data = {"title": "Updated Task", "description": "Updated Desc"}
         response: Response = api_client.put(url, data)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_update_authenticated_verified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_update_authenticated_verified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         api_client.force_authenticate(user=incompleted_task.user)
         data = {"title": "Updated Task", "description": "Updated Desc"}
@@ -165,9 +141,7 @@ class TestTask:
         response: Response = api_client.put(url, data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_task_update_authenticated_unverified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_update_authenticated_unverified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         user = incompleted_task.user
         user.is_verified = False
@@ -176,26 +150,20 @@ class TestTask:
         response: Response = api_client.put(url, data)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_partial_update_requires_authentication(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_partial_update_requires_authentication(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         data = {"title": "Updated Task"}
         response: Response = api_client.patch(url, data)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_partial_update_authenticated_verified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_partial_update_authenticated_verified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         api_client.force_authenticate(user=incompleted_task.user)
         data = {"title": "Updated Task"}
         response: Response = api_client.patch(url, data)
         assert response.status_code == status.HTTP_200_OK
 
-    def test_task_partial_update_authenticated_unverified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_partial_update_authenticated_unverified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         user = incompleted_task.user
         user.is_verified = False
@@ -204,24 +172,18 @@ class TestTask:
         response: Response = api_client.patch(url, data)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_delete_requires_authentication(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_delete_requires_authentication(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         response: Response = api_client.delete(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_delete_authenticated_verified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_delete_authenticated_verified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         api_client.force_authenticate(user=incompleted_task.user)
         response: Response = api_client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
-    def test_task_delete_authenticated_unverified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_delete_authenticated_unverified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-detail", args=[incompleted_task.id])
         user = incompleted_task.user
         user.is_verified = False
@@ -229,16 +191,12 @@ class TestTask:
         response: Response = api_client.delete(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_complete_requires_authentication(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_complete_requires_authentication(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-tasks-complete", args=[incompleted_task.id])
         response: Response = api_client.patch(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_complete_authenticated_verified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_complete_authenticated_verified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-tasks-complete", args=[incompleted_task.id])
         api_client.force_authenticate(user=incompleted_task.user)
         response: Response = api_client.patch(url)
@@ -246,9 +204,7 @@ class TestTask:
         incompleted_task.refresh_from_db()
         assert incompleted_task.completed is True
 
-    def test_task_complete_authenticated_unverified_user(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_complete_authenticated_unverified_user(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-tasks-complete", args=[incompleted_task.id])
         user = incompleted_task.user
         user.is_verified = False
@@ -256,25 +212,19 @@ class TestTask:
         response: Response = api_client.patch(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_complete_already_completed(
-        self, api_client: APIClient, completed_task: Task
-    ):
+    def test_task_complete_already_completed(self, api_client: APIClient, completed_task: Task):
         url = reverse("ToDo:tasks-tasks-complete", args=[completed_task.id])
         api_client.force_authenticate(user=completed_task.user)
         response: Response = api_client.patch(url)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert response.data["detail"] == "Task is already completed."
 
-    def test_task_restore_requires_authentication(
-        self, api_client: APIClient, completed_task: Task
-    ):
+    def test_task_restore_requires_authentication(self, api_client: APIClient, completed_task: Task):
         url = reverse("ToDo:tasks-tasks-restore", args=[completed_task.id])
         response: Response = api_client.patch(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_restore_authenticated_verified_user(
-        self, api_client: APIClient, completed_task: Task
-    ):
+    def test_task_restore_authenticated_verified_user(self, api_client: APIClient, completed_task: Task):
         url = reverse("ToDo:tasks-tasks-restore", args=[completed_task.id])
         api_client.force_authenticate(user=completed_task.user)
         response: Response = api_client.patch(url)
@@ -282,9 +232,7 @@ class TestTask:
         completed_task.refresh_from_db()
         assert completed_task.completed is False
 
-    def test_task_restore_authenticated_unverified_user(
-        self, api_client: APIClient, completed_task: Task
-    ):
+    def test_task_restore_authenticated_unverified_user(self, api_client: APIClient, completed_task: Task):
         url = reverse("ToDo:tasks-tasks-restore", args=[completed_task.id])
         user = completed_task.user
         user.is_verified = False
@@ -292,9 +240,7 @@ class TestTask:
         response: Response = api_client.patch(url)
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    def test_task_restore_not_completed(
-        self, api_client: APIClient, incompleted_task: Task
-    ):
+    def test_task_restore_not_completed(self, api_client: APIClient, incompleted_task: Task):
         url = reverse("ToDo:tasks-tasks-restore", args=[incompleted_task.id])
         api_client.force_authenticate(user=incompleted_task.user)
         response: Response = api_client.patch(url)

@@ -6,7 +6,7 @@ router = DefaultRouter()
 router.register(r"tasks", TasksViewSet, basename="tasks")
 
 urlpatterns = [
-    path('weather/', WeatherAPIView.as_view(), name='weather-api'),
+    path("weather/", WeatherAPIView.as_view(), name="weather-api"),
 ]
 
 urlpatterns += router.urls

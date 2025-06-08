@@ -62,9 +62,7 @@ class TaskRestoreView(LoginRequiredMixin, VerifiedUserRequiredMixin, View):
         return redirect("ToDo:tasks")
 
 
-class TaskCreateView(
-    LoginRequiredMixin, VerifiedUserRequiredMixin, CreateView
-):
+class TaskCreateView(LoginRequiredMixin, VerifiedUserRequiredMixin, CreateView):
     model = Task
     form_class = TaskForm
     template_name = "ToDo/task_form.html"
@@ -84,9 +82,7 @@ class TaskCreateView(
         return render(self.request, self.template_name, {"form": form})
 
 
-class TaskUpdateView(
-    LoginRequiredMixin, VerifiedUserRequiredMixin, UpdateView
-):
+class TaskUpdateView(LoginRequiredMixin, VerifiedUserRequiredMixin, UpdateView):
     model = Task
     form_class = TaskForm
     template_name = "ToDo/task_form.html"
@@ -101,25 +97,19 @@ class TaskUpdateView(
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
-            raise PermissionDenied(
-                "You do not have permission to edit this task."
-            )
+            raise PermissionDenied("You do not have permission to edit this task.")
         return obj
 
     def form_invalid(self, form):
         return render(self.request, self.template_name, {"form": form})
 
 
-class TaskDeleteView(
-    LoginRequiredMixin, VerifiedUserRequiredMixin, DeleteView
-):
+class TaskDeleteView(LoginRequiredMixin, VerifiedUserRequiredMixin, DeleteView):
     model = Task
     success_url = reverse_lazy("ToDo:tasks")
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
-            raise ValidationError(
-                "You do not have permission to delete this task."
-            )
+            raise ValidationError("You do not have permission to delete this task.")
         return obj

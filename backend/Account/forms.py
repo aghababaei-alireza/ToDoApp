@@ -14,9 +14,7 @@ class EmailAuthenticationForm(forms.Form):
     Form for authentication using Email.
     """
 
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={"autofocus": True})
-    )
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"autofocus": True}))
     password = forms.CharField(
         label=_("Password"),
         strip=False,
@@ -25,8 +23,7 @@ class EmailAuthenticationForm(forms.Form):
 
     error_messages = {
         "invalid_login": _(
-            "Please enter a correct email and password. Note that both "
-            "fields may be case-sensitive."
+            "Please enter a correct email and password. Note that both " "fields may be case-sensitive."
         ),
         "inactive": _("This account is inactive."),
     }
@@ -48,15 +45,11 @@ class EmailAuthenticationForm(forms.Form):
         password = self.cleaned_data.get("password")
 
         if email and password:
-            self.user_cache = authenticate(
-                self.request, email=email, password=password
-            )
+            self.user_cache = authenticate(self.request, email=email, password=password)
             if self.user_cache is None:
                 self.get_invalid_login_error()
             elif not self.user_cache.is_active:
-                raise forms.ValidationError(
-                    self.error_messages["inactive"], code="inactive"
-                )
+                raise forms.ValidationError(self.error_messages["inactive"], code="inactive")
             return self.cleaned_data
 
         self.get_invalid_login_error()

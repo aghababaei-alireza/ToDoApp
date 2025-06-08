@@ -30,9 +30,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "last_login",
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name="last login"
-                    ),
+                    models.DateTimeField(blank=True, null=True, verbose_name="last login"),
                 ),
                 (
                     "is_superuser",
@@ -52,27 +50,19 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "is_active",
-                    models.BooleanField(
-                        default=True, verbose_name="is active"
-                    ),
+                    models.BooleanField(default=True, verbose_name="is active"),
                 ),
                 (
                     "is_staff",
-                    models.BooleanField(
-                        default=False, verbose_name="is staff"
-                    ),
+                    models.BooleanField(default=False, verbose_name="is staff"),
                 ),
                 (
                     "created_date",
-                    models.DateTimeField(
-                        auto_now_add=True, verbose_name="created date"
-                    ),
+                    models.DateTimeField(auto_now_add=True, verbose_name="created date"),
                 ),
                 (
                     "updated_date",
-                    models.DateTimeField(
-                        auto_now=True, verbose_name="updated date"
-                    ),
+                    models.DateTimeField(auto_now=True, verbose_name="updated date"),
                 ),
                 (
                     "groups",

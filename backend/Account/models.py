@@ -53,16 +53,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, verbose_name=_("email address"))
     is_active = models.BooleanField(default=True, verbose_name=_("is active"))
     is_staff = models.BooleanField(default=False, verbose_name=_("is staff"))
-    is_verified = models.BooleanField(
-        default=False, verbose_name=_("is verified")
-    )
+    is_verified = models.BooleanField(default=False, verbose_name=_("is verified"))
 
-    created_date = models.DateTimeField(
-        auto_now_add=True, verbose_name=_("created date")
-    )
-    updated_date = models.DateTimeField(
-        auto_now=True, verbose_name=_("updated date")
-    )
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name=_("created date"))
+    updated_date = models.DateTimeField(auto_now=True, verbose_name=_("updated date"))
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
