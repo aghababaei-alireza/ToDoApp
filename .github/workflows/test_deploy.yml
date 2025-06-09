@@ -35,7 +35,11 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        # password: ${{ secrets.PASSWORD }}
-        key: ${{ secrets.KEY }}
+        password: ${{ secrets.PASSWORD }}
+        # key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
-        script: ls
+        script: |
+          cd ${{ secrets.PROJECT_PATH}}
+          docker compose -f docker-compose-stage.yml down
+          git pull
+          docker compose -f docker-compose-stage.yml up -d --build
