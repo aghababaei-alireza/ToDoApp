@@ -14,15 +14,13 @@ def api_client() -> APIClient:
 
 @pytest.fixture
 def verified_user() -> User:
-    user = User.objects.create_user(
-        email="test@example.com", password="pass@1234*", is_verified=True)
+    user = User.objects.create_user(email="test@example.com", password="pass@1234*", is_verified=True)
     return user
 
 
 @pytest.fixture
 def unverified_user() -> User:
-    user = User.objects.create_user(
-        email="test@example.com", password="pass@1234*", is_verified=False)
+    user = User.objects.create_user(email="test@example.com", password="pass@1234*", is_verified=False)
     return user
 
 

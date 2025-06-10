@@ -106,8 +106,7 @@ class TaskUpdateView(LoginRequiredMixin, VerifiedUserRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
-            raise PermissionDenied(
-                "You do not have permission to edit this task.")
+            raise PermissionDenied("You do not have permission to edit this task.")
         return obj
 
     def form_invalid(self, form):
@@ -121,6 +120,5 @@ class TaskDeleteView(LoginRequiredMixin, VerifiedUserRequiredMixin, DeleteView):
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
-            raise ValidationError(
-                "You do not have permission to delete this task.")
+            raise ValidationError("You do not have permission to delete this task.")
         return obj
