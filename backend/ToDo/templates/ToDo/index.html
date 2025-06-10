@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load ToDo_extras %}
+
+{% block title %}Home{% endblock title %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "ToDo/css/styles.css" %}">
+{% endblock extra_css %}
+
+{% block content %}
+    <main>
+        <section class="tasks">
+            <h1>ToDo App</h1>
+            <p>Welcome to the ToDoApp</p>
+            <p>You can manage your tasks efficiently!</p>
+            <div class="status_list">
+                <a class="button" href="{% url "Account:login" %}">Log In</a>
+                <a class="button" href="{% url "Account:signup" %}">Register</a>
+            </div>
+        </section>
+    </main>
+{% endblock content %}
+
+{% block extra_js %}
+    <script src="{% static "ToDo/js/scripts.js" %}"></script>
+{% endblock extra_js %}

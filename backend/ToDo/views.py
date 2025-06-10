@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError, PermissionDenied
@@ -8,6 +8,15 @@ from django.urls import reverse_lazy
 from .models import Task
 from .forms import TaskForm
 from Account.mixins import VerifiedUserRequiredMixin
+
+
+class IndexView(TemplateView):
+    template_name = "ToDo/index.html"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("ToDo:tasks")
+        return super().get(request, *args, **kwargs)
 
 
 class TaskListView(LoginRequiredMixin, VerifiedUserRequiredMixin, ListView):
@@ -97,7 +106,8 @@ class TaskUpdateView(LoginRequiredMixin, VerifiedUserRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
-            raise PermissionDenied("You do not have permission to edit this task.")
+            raise PermissionDenied(
+                "You do not have permission to edit this task.")
         return obj
 
     def form_invalid(self, form):
@@ -111,5 +121,6 @@ class TaskDeleteView(LoginRequiredMixin, VerifiedUserRequiredMixin, DeleteView):
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if obj.user != self.request.user:
-            raise ValidationError("You do not have permission to delete this task.")
+            raise ValidationError(
+                "You do not have permission to delete this task.")
         return obj
